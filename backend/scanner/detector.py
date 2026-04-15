@@ -2,13 +2,14 @@ import re
 
 def scan(text):
     findings = []
-    override_find = override_attempt(text)
-    functions_list = [override_find]
+
+    functions_list = [override_attempt]
 
     for func in functions_list:
-        if not func is None:
-            findings.append(func)
-            
+        result = func(text)
+        if not result is None:
+            findings.append(result)
+
     return findings
 
 def override_attempt(text):
