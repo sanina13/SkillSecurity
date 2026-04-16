@@ -199,7 +199,7 @@ temp/
 
 
 # ============================================
-# DATABASES (se adicionares no futuro)
+# DATABASES 
 # ============================================
 *.sqlite
 *.sqlite3
@@ -208,7 +208,7 @@ temp/
 
 
 # ============================================
-# DOCKER (se adicionares no futuro)
+# DOCKER
 # ============================================
 # Podes querer comentar isto se quiseres commitar o Dockerfile
 # Dockerfile.local
