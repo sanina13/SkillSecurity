@@ -6,7 +6,7 @@ app = FastAPI()
 @app.get("/")
 
 def root():
-  return {"message": "SkillSecurity API"}
+    return {"message": "SkillSecurity API"}
 
 @app.post("/scan")
 async def scan_file(file: UploadFile):
