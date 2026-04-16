@@ -11,32 +11,37 @@ def scan(text):
 
     for func in functions_list:
         result = func(text)
-        if result is not None:
-            findings.append(result)
+        if result:
+            findings.extend(result)
 
     return findings
 
 def override_attempt(text):
+    override_attempt_list = []
     list_lines = text.split("\n")
     for i, line in enumerate(list_lines):
         for reg in LIST_REGEX_OVERRIDE:
             matched = re.search(reg, line, re.IGNORECASE)
             if matched:
                 matched_text = matched.group()
-                return{
-                    "rule": "role-override", "severity": "critical", "line": i + 1, "matched_text": matched_text
-                }
-    return None
+                override_attempt_list.append({
+                "rule": "role-override",
+                "severity": "critical",
+                "line": i + 1,
+                "matched_text": matched_text
+                })
+    return override_attempt_list
 
 def system_impersonation(text):
     list_lines = text.split("\n")
+    system_impersonation_list = []
 
     for i, line in enumerate(list_lines):
         for reg in LIST_SYSTEM_IMPERSONATION_REGEX:
             matched = re.search(reg, line, re.IGNORECASE)
             if matched:
                 matched_text = matched.group()
-                return{
+                system_impersonation_list.append({
                    "rule": "system-impersonation", "severity": "critical", "line": i + 1, "matched_text": matched_text
-                 }
-    return None
+                 })
+    return system_impersonation_list
