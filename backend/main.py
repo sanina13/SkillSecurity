@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile
+from fastapi import FastAPI, UploadFile, HTTPException
 from scanner.detector import scan
 
 app = FastAPI()
@@ -10,6 +10,11 @@ def root():
 
 @app.post("/scan")
 async def scan_file(file: UploadFile):
-    content = await file.read()
-    text = content.decode("utf-8")
-    return scan(text)
+
+    if file.filename.endswith(".md"):
+        content = await file.read()
+        text = content.decode("utf-8")
+        return scan(text)
+
+    raise HTTPException(status_code=400, detail="Only .md files are accepted")
+
