@@ -1,7 +1,16 @@
 from fastapi import FastAPI, UploadFile, HTTPException
 from scanner.detector import scan
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+#Tells to FastApi to accept requests from localhost:5173
+app.add_middleware(
+     CORSMiddleware,
+     allow_origins=["http://localhost:5173"],
+     allow_methods=["*"],
+     allow_headers=["*"]
+)
 
 @app.get("/")
 
