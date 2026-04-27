@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from scanner.schemas import ScanResponse
 import logging
 from dotenv import load_dotenv
+from scanner.ai_detector import ai_scan
 import os
 
 load_dotenv()
@@ -30,7 +31,7 @@ def root():
     return {"message": "SkillSecurity API"}
 
 @app.post("/scan", response_model=ScanResponse)
-async def scan_file(file: UploadFile):
+async def scan_file(file: UploadFile, deep: bool = False):
     if not file.filename.endswith(".md"):
         logger.warning("Rejected file: %s - invalid extension", file.filename)
         raise HTTPException(status_code=400, detail="Only .md files are accepted")
@@ -48,6 +49,11 @@ async def scan_file(file: UploadFile):
 
     findings = scan(text)
     logger.info("Scan complete: %d findings", len(findings))
+
+    if deep:
+        ai_findings = ai_scan(text)
+        findings.extend(ai_findings)
+        
     return {"filename": file.filename, "total_findings": len(findings), "summary": {
          "critical": sum(1 for find in findings if find.get("severity") == "critical"),
          "high": sum(1 for find in findings if find.get("severity") == "high"),

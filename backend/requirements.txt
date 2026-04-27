@@ -4,3 +4,4 @@ uvicorn==0.*
 python-multipart==0.*
 httpx==0.*
 python-dotenv==1.*
+anthropic==0.*
