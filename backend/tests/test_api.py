@@ -32,3 +32,8 @@ def test_reject_large_file():
     response = client.post("/scan", files={"file": ("big.md", large_content, "text/markdown")})
 
     assert response.status_code == 400
+
+def test_reject_invalid_encoding():
+    invalid_bytes = b"\x80\x81\x82\x83"
+    response = client.post("/scan", files={"file": ("test.md", invalid_bytes, "text/markdown")})
+    assert response.status_code == 400

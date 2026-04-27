@@ -31,10 +31,14 @@ async def scan_file(file: UploadFile):
     content = await file.read()
     logger.info("Scan request: %s (%d bytes)", file.filename, len(content))
     if len(content) > 1_000_000:
-            logger.warning("Rejected file: %s - too large (%d bytes)", file.filename, len(content))
-            raise HTTPException(status_code=400, detail="File too large. Maximum size is 1MB")
+        logger.warning("Rejected file: %s - too large (%d bytes)", file.filename, len(content))
+        raise HTTPException(status_code=400, detail="File too large. Maximum size is 1MB")
+    try:
+        text = content.decode("utf-8")
+    except UnicodeDecodeError:
+        raise HTTPException(status_code=400, detail="File not valid in UTF-8")
 
-    text = content.decode("utf-8")
+
     findings = scan(text)
     logger.info("Scan complete: %d findings", len(findings))
     return {"filename": file.filename, "total_findings": len(findings), "summary": {
